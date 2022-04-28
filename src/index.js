@@ -19,6 +19,7 @@ class App extends React.Component {
     axios.post('http://127.0.0.1:5000/trimming', {
       post_img: img
     }).then(function (res) {
+      console.log(res)
       alert(res.data.result);
     })
   };
