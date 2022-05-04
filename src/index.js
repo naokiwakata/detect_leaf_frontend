@@ -9,6 +9,7 @@ class App extends React.Component {
     this.state = {
       imageData: null,
       predictedImageData: null,
+      isLoading: false,
     };
 
     this.fileInput = React.createRef()
@@ -17,9 +18,11 @@ class App extends React.Component {
   }
 
   trim = async (img) => {
+    this.startLoading()
     const response = await axios.post('http://127.0.0.1:5000/trimming', {
       post_img: img
     });
+    this.endLoading()
     const img_base64 = response.data.result;
     this.setState({
       predictedImageData: "data:image/png;base64," + img_base64
@@ -50,6 +53,17 @@ class App extends React.Component {
     this.fileInput.current.value = ''
     this.setState({ imageData: null })
   }
+  startLoading() {
+    this.setState({
+      isLoading: true,
+    })
+  }
+
+  endLoading() {
+    this.setState({
+      isLoading: false,
+    })
+  }
 
   render() {
 
@@ -58,7 +72,7 @@ class App extends React.Component {
     if (imageData !== null) {
       preview = (
         <div>
-          <img src={imageData} width={300} alt='' />
+          <img src={imageData} width={500} alt='' />
         </div>
       )
     } else {
@@ -81,14 +95,24 @@ class App extends React.Component {
     if (predictedImageData !== null) {
       predictedImage = (
         <div>
-          <img src={predictedImageData} alt="predicted_img" width="300"></img>
+          <img src={predictedImageData} alt="predicted_img" width={500}></img>
         </div>
       )
     }
 
+    if (this.state.isLoading) {
+      return (
+        <div className="App">
+          <h1>Detect Leaf</h1>
+          <h2>... Loading ...</h2>
+        </div>
+      )
+    }
     return (
       <div className="App">
+
         <h1>Detect Leaf</h1>
+
         <form enctype="multipart/form-data"
           onSubmit={this.handleSubmit}>
           <input type="file"
