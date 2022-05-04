@@ -8,6 +8,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       imageData: null,
+      predictedImageData: null,
     };
 
     this.fileInput = React.createRef()
@@ -15,17 +16,18 @@ class App extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  trimmingImage = img => {
-    axios.post('http://127.0.0.1:5000/trimming', {
+  trim = async (img) => {
+    const response = await axios.post('http://127.0.0.1:5000/trimming', {
       post_img: img
-    }).then(function (res) {
-      console.log(res)
-      alert(res.data.result);
+    });
+    const img_base64 = response.data.result;
+    this.setState({
+      predictedImageData: "data:image/png;base64," + img_base64
     })
-  };
+  }
 
   handleSubmit = event => {
-    this.trimmingImage(this.state.imageData)
+    this.trim(this.state.imageData)
     event.preventDefault();
   };
 
@@ -74,6 +76,15 @@ class App extends React.Component {
       )
     }
 
+    const predictedImageData = this.state.predictedImageData
+    let predictedImage = ''
+    if (predictedImageData !== null) {
+      predictedImage = (
+        <div>
+          <img src={predictedImageData} alt="predicted_img" width="300"></img>
+        </div>
+      )
+    }
 
     return (
       <div className="App">
@@ -97,6 +108,7 @@ class App extends React.Component {
             POST</button>
           {preview}
           {resetButton}
+          {predictedImage}
         </form>
       </div>
     );
