@@ -8,6 +8,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       imageData: null,
+      predictedImage: null,
+      trimmedImages: [],
     };
 
     this.fileInput = React.createRef()
