@@ -11,3 +11,147 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.h1 {
+  font-size: 50px;
+}
+
+.postbutton {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 10px;
+  padding: 6px 25px;
+  color: #F15A24;
+  font-weight: bold;
+  letter-spacing: 0.5pt;
+  text-decoration: none;
+  background-color: #ffffff;
+  border: 1px solid #F15A24;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+}
+
+.postbutton:hover {
+  color: #ffffff;
+  background-color: #F15A24;
+}
+
+
+.savebutton {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 10px;
+  padding: 6px 25px;
+  color: #F15A24;
+  font-weight: bold;
+  letter-spacing: 0.5pt;
+  text-decoration: none;
+  background-color: #ffffff;
+  border: 1px solid #F15A24;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+}
+
+.savebutton:hover {
+  color: #ffffff;
+  background-color: #F15A24;
+}
+
+
+form .formbottom {
+  text-align: center;
+}
+
+form .select {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+  padding: 6px 25px;
+  color: #F15A24;
+  font-weight: bold;
+  letter-spacing: 0.5pt;
+  text-decoration: none;
+  background-color: #ffffff;
+  border: 1px solid #F15A24;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+}
+
+.select:hover {
+  color: #ffffff;
+  background-color: #F15A24;
+}
+
+.fileinput {
+  display: none;
+}
+
+.relative {
+  position: relative;
+}
+
+.deletebutton {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  font-weight: bold;
+  background: rgb(255, 56, 56);
+  top: 0%;
+  right: 0%;
+  position: absolute;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+  cursor: default;
+}
+
+.deletebutton:hover {
+  background-color: #ffb325;
+}
+
+.filelabel {
+  display: inline-block;
+  position: relative;
+  background-color: #1877F2;
+  color: #fff;
+  font-size: 16px;
+  margin: 0px 10px;
+  padding: 10px 25px;
+  border-radius: 8px;
+  transition: all 0.5s;
+}
+
+.filelabel:hover {
+  background-color: #004db1;
+}
+
+.predictresult {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cutimgs {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cutimg {
+  padding: 4px;
+  margin: 0px;
+}
