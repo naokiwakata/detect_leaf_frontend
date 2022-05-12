@@ -12,6 +12,7 @@ class App extends React.Component {
       predictedImageData: null,
       cutImgs: null,
       isLoading: false,
+      filename: null,
     };
 
     this.fileInput = React.createRef()
@@ -34,6 +35,45 @@ class App extends React.Component {
     })
   }
 
+  removeCutImg = index => {
+    let array = this.state.cutImgs;
+    array.splice(index, 1);
+    this.setState({
+      cutImgs: array
+    });
+  }
+
+  saveFile() {
+    const cutImgsData = this.state.cutImgs
+
+    cutImgsData.forEach((cut_img_base64, index) => {
+
+      const id = "cut_img_save"
+      const element = document.getElementsByClassName({ id })
+      element.click()
+      console.log(`${index}: ${cut_img_base64}`)
+      const downloadName = String(index) + this.state.filename;
+      const cut_src = "data:image/png;base64," + cut_img_base64
+
+      const image = fetch(cut_src);
+      const imageBlob = image.blob();
+      const imageURL = URL.createObjectURL(imageBlob);
+
+      // 拡張子取得
+      const mimeTypeArray = imageBlob.type.split('/');
+      const extension = mimeTypeArray[1];
+
+      // ダウンロード
+      const link = document.createElement('a');
+      link.href = imageURL;
+      link.download = downloadName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+
+  }
+
   handleSubmit = event => {
     this.trim(this.state.imageData)
     event.preventDefault();
@@ -44,13 +84,20 @@ class App extends React.Component {
 
     if (files.length > 0) {
       const file = files[0]
+      const filename = file['name']
       const reader = new FileReader()
       reader.onload = (e) => {
-        this.setState({ imageData: e.target.result })
+        this.setState({
+          imageData: e.target.result,
+          filename: filename,
+        })
       };
       reader.readAsDataURL(file)
     } else {
-      this.setState({ imageData: null })
+      this.setState({
+        imageData: null,
+        filename: null,
+      })
     }
   }
 
@@ -80,22 +127,6 @@ class App extends React.Component {
           <img src={imageData} width={500} alt='' />
         </div>
       )
-    } else {
-      preview = (
-
-        <div>
-          <img src="https://smalistblog.com/wp-content/uploads/2021/07/%E6%A3%AE%E4%B8%83%E5%A5%88.jpg" width={400} alt='' />
-        </div>
-      )
-    }
-
-    let resetButton = ''
-    if (imageData !== null) {
-      resetButton = (
-        <div>
-          <button type="button" onClick={this.resetInput.bind(this)}>リセット</button>
-        </div>
-      )
     }
 
     const predictedImageData = this.state.predictedImageData
@@ -109,48 +140,35 @@ class App extends React.Component {
       )
       saveButton = (
         <button className='savebutton'
-          onSubmit={(e) => {
-
-          }}>
+          onClick={
+            () => this.saveFile()
+          }>
           SAVE</button>
-      )
-    } else {
-      predictedImage = (
-        <div>
-          <img src="https://smalistblog.com/wp-content/uploads/2021/07/%E6%A3%AE%E4%B8%83%E5%A5%88.jpg" width={400} alt='' />
-        </div>
       )
     }
 
     const cutImgsData = this.state.cutImgs
     let cutImgs = []
     if (cutImgsData !== null) {
-      for (const cut_img_base64 of cutImgsData) {
+      for (let i = 0; i < cutImgsData.length; i++) {
+        const filename = this.state.filename;
+        const downloadName = filename.split('.')[0] + "_" + String(i)
+        const cut_img_base64 = cutImgsData[i];
         const cut_src = "data:image/png;base64," + cut_img_base64
         const cutImg = (
           <div className='relative'>
+            <a href={cut_src} className="cut_img_save" download={downloadName}>
+              save
+            </a>
             <div className='cutimg'>
               <img src={cut_src} alt="cut_img" width={100}></img>
             </div>
-            <div className='deletebutton'>
+            <div className='deletebutton' onClick={
+              () => this.removeCutImg(i)
+            }>
               ×
             </div>
-          </div>
-        )
-        cutImgs.push(cutImg)
-      }
-    } else {
-      for (let i = 0; i < 3; i++) {
-        const cut_src = "https://smalistblog.com/wp-content/uploads/2021/07/%E6%A3%AE%E4%B8%83%E5%A5%88.jpg"
-        const cutImg = (
-          <div className='relative'>
-            <div className='cutimg'>
-              <img src={cut_src} alt="cut_img" width={100}></img>
-            </div>
-            <div className='deletebutton'>
-              ×
-            </div>
-          </div>
+          </div >
         )
         cutImgs.push(cutImg)
       }
@@ -169,35 +187,38 @@ class App extends React.Component {
 
         <h1 className='h1'>Detect Leaf</h1>
 
-        <form enctype="multipart/form-data"
-          onSubmit={this.handleSubmit}>
-          <label for='file' className='filelabel'>SELECT PUMPKIN IMAGE</label>
-          <input type="file"
-            id="file"
-            name="file"
-            accept="image/*,.png,.jpg,.jpeg"
-            multiple={true}
-            ref={this.fileInput}
-            className='fileinput'
-            onChange={(e) => {
-              this.handleChange(e)
-            }}
-          />
-          <br />
-          <button type="submit" formmethod="post" className='postbutton'
-            onSubmit={(e) => {
-              this.handleSubmit(e)
-            }}>
-            POST</button>
-          {saveButton}
-          <div className='predictresult'>
-            {preview}
-            {predictedImage}
-          </div>
-          <div className='cutimgs'>
-            {cutImgs}
-          </div>
-        </form>
+
+        <div className='button'>
+          <form enctype="multipart/form-data"
+            onSubmit={this.handleSubmit}>
+            <label for='file' className='filelabel'>SELECT PUMPKIN IMAGE</label>
+            <input type="file"
+              id="file"
+              name="file"
+              accept="image/*,.png,.jpg,.jpeg"
+              multiple={true}
+              ref={this.fileInput}
+              className='fileinput'
+              onChange={(e) => {
+                this.handleChange(e)
+              }}
+            />
+            <br />
+            <button type="submit" formmethod="post" className='postbutton'
+              onSubmit={(e) => {
+                this.handleSubmit(e)
+              }}>
+              POST</button>
+          </form>
+        </div>
+
+        <div className='predictresult'>
+          {preview}
+          {predictedImage}
+        </div>
+        <div className='cutimgs'>
+          {cutImgs}
+        </div>
       </div>
     );
   }
